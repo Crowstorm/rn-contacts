@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
-import { StyleSheet, Text, View, PermissionsAndroid } from "react-native";
+import { SafeAreaView, Text, View, PermissionsAndroid } from "react-native";
 import Contacts from "react-native-contacts";
+import { ContainerStyles, TextStyles } from "./constants/Styles";
 
-export default function App() {
+const App: React.FC = () => {
 
 	useEffect(() => {
 		getContacts();
@@ -29,18 +30,11 @@ export default function App() {
 	};
 
 	return (
-		<View style={styles.container}>
-			<Text>Open up App.tsx to start working on your app!</Text>
+		<SafeAreaView style={ContainerStyles.APP_CONTAINER}>
+			<Text style={TextStyles.PRIMARY_TEXT}>Open up App.tsx to start working on your app!</Text>
 			<StatusBar style="auto" />
-		</View>
+		</SafeAreaView>
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-});
+export default App;
