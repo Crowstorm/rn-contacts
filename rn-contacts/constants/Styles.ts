@@ -7,7 +7,6 @@ import { black, white } from "./Colors";
 
 export const ContainerStyles = StyleSheet.create({
   APP_CONTAINER: {
-    flex: 1,
     backgroundColor: white,
     height: hp("100%"),
     paddingHorizontal: wp("5%"),
