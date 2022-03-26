@@ -1,40 +1,66 @@
 import React, { useEffect } from "react";
-import { Text, View, PermissionsAndroid } from "react-native";
+import { Text, View, PermissionsAndroid, Platform } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from "expo-status-bar";
-import Contacts from "react-native-contacts";
+import Contacts, { Contact } from "react-native-contacts";
 import { ContainerStyles, TextStyles } from "./constants/Styles";
 
 const App: React.FC = () => {
 
 	useEffect(() => {
-		getContacts();
+		if (Platform.OS === "android") {
+			getReadContactsPermission().then(() => {
+				getContacts();
+			});
+		} else {
+			getContacts();
+		}
 	}, [])
 
+	const getReadContactsPermission = async () => {
+		try {
+			const granted = await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+				{
+					title: "Contacts",
+					message: "This app would like to view your contacts.",
+					buttonNegative: "Cancel",
+					buttonPositive: "OK"
+				}
+			);
+			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+				console.log("You can read the contacts");
+			} else {
+				console.log("Read contacts permission denied");
+			}
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
 	const getContacts = () => {
-		PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-			title: "Contacts",
-			message: "This app would like to view your contacts.",
-			buttonPositive: "Please accept bare mortal",
-		}).then(() => {
-			console.log("poszlo");
-			Contacts.getAll()
-				.then((contacts: any) => {
-					// work with contacts
-					console.log(contacts);
-					return "x";
-				})
-				.catch((e) => {
-					console.log(e);
-				});
-		});
+		Contacts.getAll()
+			.then((contacts: Contact[]) => {
+				// work with contacts
+				console.log('Successfully acquired contacts');
+			})
+			.catch((e) => {
+				console.error(e);
+			});
+
+		Contacts.getCount().then((count: number) => {
+			console.log(`Acquired ${count} contacts`)
+		})
+			.catch((e) => {
+				console.error(e)
+			})
 	};
 
 	return (
 		<SafeAreaProvider>
 			<SafeAreaView>
 				<View style={ContainerStyles.APP_CONTAINER}>
-					<Text style={TextStyles.PRIMARY_TEXT}>Open up App.tsx to start working on your app!</Text>
+					<Text style={TextStyles.PRIMARY_TEXT}>react-native-contacts test app</Text>
 					<StatusBar style="dark" />
 				</View>
 			</SafeAreaView>

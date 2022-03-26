@@ -17,7 +17,7 @@ export const ContainerStyles = StyleSheet.create({
 export const TextStyles = StyleSheet.create({
   PRIMARY_TEXT: {
     color: black,
-    fontSize: 24,
+    fontSize: hp("4%"),
     textAlign: "center",
   },
 });
